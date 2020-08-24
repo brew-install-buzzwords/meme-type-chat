@@ -1,4 +1,3 @@
-const axios = require('axios');
 const meme_type = require('meme-type-npm');
 
 const commandMapping = {
@@ -31,7 +30,7 @@ function help () {
 
 const commands = Object.keys(commandMapping);
 
-const parseCommand = (message) => {
+function parseCommand(message) {
 
     const command = message ? message.split(' ')[0] : '';
     console.log(command);
@@ -46,11 +45,12 @@ const parseCommand = (message) => {
     return 'ERROR: command not recognized';
 }
 
-const sendMessage = async (chatId, inputText) => {
-    const token = process.env.TOKEN;
-
-    console.log(`sendMessage chatId: ${chatId}`);
-    console.log(`sendMessage text: ${text}`);
+/**
+ * Builds response
+ * @param {*} chatId
+ * @param {*} inputText 
+ */
+function buildResponse(chatId, inputText) {
     let message = inputText;
 
     const parsed = parseCommand(inputText);
@@ -58,33 +58,41 @@ const sendMessage = async (chatId, inputText) => {
         message = parsed;
     }
 
-    const data = {
-        chat_id: chatId,
-        text: message,
+    return {
+        statusCode: 200,
+        body: JSON.stringify(`${chatId}: ${message}`),
     };
-
-    await axios.post(`https://api.telegram.org/bot${encodeURIComponent(token)}/sendMessage?chat_id=${encodeURIComponent(chatId)}&text=${encodeURIComponent(message)}`, data).then(response => {
-        console.log(response);
-    });
 }
 
-const getBody = (event) => {
+/**
+ * Gets the request event body
+ * @param {*} event the request event
+ */
+function getBody(event) {
     return JSON.parse(event.body);
 }
 
-const getChatId = (requestBody) => {    
+/**
+ * Gets the chatId from the request body
+ * @param {*} requestBody the request body
+ */
+function getChatId(requestBody) {    
     if (requestBody && requestBody.message && requestBody.message.chat) {
         return requestBody.message.chat.id;
     }
 }
 
-const getMessage = (requestBody) => {
+/**
+ * Gets the message from the request body
+ * @param {*} requestBody the request body
+ */
+function getMessage(requestBody) {
     if (requestBody && requestBody.message) {
         return requestBody.message.text;
     }
 }
 
-exports.handler = async (event) => {
+exports.telegramHandler = async (event) => {
     console.log(event);
 
     try {
@@ -95,13 +103,7 @@ exports.handler = async (event) => {
         console.log(`requestMessage: ${requestMessage}`);
         console.log(`chatId: ${chatId}`);
 
-        await sendMessage(chatId, requestMessage);
-
-        return JSON.stringify(
-            {
-                statusCode: 200,
-            }
-        );
+        return buildResponse(chatId, requestMessage);
     } catch (e) {
         console.error(e);
         return JSON.stringify(
