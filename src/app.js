@@ -72,7 +72,6 @@ function buildResponse(chatId, inputText) {
     const parsed = parseCommand(inputText);
     if (parsed) {
         message = parsed;
-        response.headers = 'Content-Type: application/json';
         response.body = JSON.stringify(
             {
                 method: 'sendMessage',
@@ -82,7 +81,7 @@ function buildResponse(chatId, inputText) {
         );
     }
 
-    return JSON.stringify(response);
+    return response;
 
 }
 
