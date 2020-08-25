@@ -32,14 +32,27 @@ const commands = Object.keys(commandMapping);
 
 function parseCommand(message) {
 
-    const command = message ? message.split(' ')[0] : '';
-    console.log(command);
-    if (command && command[0] === '/' && commands.includes(command)) {
-        const s = message.replace(`${command} `, '');
+	const commandStringRegExp = new RegExp('^(' + commands.join('(\\s|)|') + '(\\s|))+');
+    const commandRegExp = new RegExp(commands.join('|'), 'g');
+
+    const commandString = commandStringRegExp.test(message) ? message.match(commandStringRegExp).shift() : '';
+    console.log(commandString);
+
+    if (commandString) {
+        let s = message.replace(commandString, '');
         console.log(s);
-        const s2 = commandMapping[command](s);
-        console.log(`${command}: ${s2}`);
-        return s2;
+        if(!s){
+        	return;
+        }
+
+        for(command of commandString.match(commandRegExp)){
+        	if(command){
+        		s = commandMapping[command](s);
+        	}
+        }
+
+        console.log(`${commandString}: ${s}`);
+        return s;
     }
 
     return 'ERROR: command not recognized';
@@ -52,16 +65,25 @@ function parseCommand(message) {
  */
 function buildResponse(chatId, inputText) {
     let message = inputText;
+    let response = {
+            statusCode: 200,
+        };
 
     const parsed = parseCommand(inputText);
     if (parsed) {
         message = parsed;
+        response.headers = 'Content-Type: application/json';
+        response.body = JSON.stringify(
+            {
+                method: 'sendMessage',
+                chat_id: chatId,
+                text: message
+            }
+        );
     }
 
-    return {
-        statusCode: 200,
-        body: JSON.stringify(`${chatId}: ${message}`),
-    };
+    return JSON.stringify(response);
+
 }
 
 /**
@@ -102,8 +124,17 @@ exports.telegramHandler = async (event) => {
 
         console.log(`requestMessage: ${requestMessage}`);
         console.log(`chatId: ${chatId}`);
+        if(requestMessage){
+            return buildResponse(chatId, requestMessage);
+        }
 
-        return buildResponse(chatId, requestMessage);
+        return JSON.stringify(
+            {
+                statusCode: 200
+            }
+        );
+        
+
     } catch (e) {
         console.error(e);
         return JSON.stringify(
@@ -113,4 +144,4 @@ exports.telegramHandler = async (event) => {
             }
         );
     }
-};
+}
