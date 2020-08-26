@@ -82,7 +82,6 @@ function buildResponse(chatId, inputText) {
     }
 
     return response;
-
 }
 
 /**
@@ -127,20 +126,16 @@ exports.telegramHandler = async (event) => {
             return buildResponse(chatId, requestMessage);
         }
 
-        return JSON.stringify(
-            {
-                statusCode: 200
-            }
-        );
+        return {
+            statusCode: 200
+        };
         
 
     } catch (e) {
         console.error(e);
-        return JSON.stringify(
-            {
-                statusCode: 500,
-                body: JSON.stringify('failed to send message'),
-            }
-        );
+        return {
+            statusCode: 500,
+            body: JSON.stringify('failed to send message'),
+        };
     }
 }
