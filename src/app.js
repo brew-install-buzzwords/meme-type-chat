@@ -1,5 +1,7 @@
 const meme_type = require('meme-type-npm');
 
+const botTelegramHandle = "@MemeTypeBot";
+
 const commandMapping = {
     '/spaceify': meme_type.spaceify,
     '/clapify': meme_type.clapify,
@@ -31,7 +33,7 @@ function help () {
 const commands = Object.keys(commandMapping);
 
 function parseCommand(message) {
-	const commandStringRegExp = new RegExp('^(' + commands.join('(\\s|)|') + '(\\s|))+');
+    const commandStringRegExp = new RegExp('^(' + commands.join('('+ botTelegramHandle +'|)(\\s|)|') + '('+ botTelegramHandle +'|)(\\s|))+');
     const commandRegExp = new RegExp(commands.join('|'), 'g');
 
     const commandString = commandStringRegExp.test(message) ? message.match(commandStringRegExp).shift() : '';
@@ -64,13 +66,15 @@ function buildResponse(chatId, inputText) {
         statusCode: 200,
     };
 
-    const parsed = parseCommand(inputText);
-    if (parsed) {
-        response.body = JSON.stringify({
-            method: 'sendMessage',
-            chat_id: chatId,
-            text: parsed,
-        });
+    if(inputText) {
+        const parsed = parseCommand(inputText);
+        if (parsed) {
+            response.body = JSON.stringify({
+                method: 'sendMessage',
+                chat_id: chatId,
+                text: parsed,
+            });
+        }
     }
 
     return response;
@@ -114,14 +118,8 @@ exports.telegramHandler = async (event) => {
 
         console.log(`requestMessage: ${requestMessage}`);
         console.log(`chatId: ${chatId}`);
-        if(requestMessage){
-            return buildResponse(chatId, requestMessage);
-        }
 
-        return {
-            statusCode: 200
-        };
-        
+        return buildResponse(chatId, requestMessage);
 
     } catch (e) {
         console.error(e);
