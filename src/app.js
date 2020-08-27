@@ -31,7 +31,6 @@ function help () {
 const commands = Object.keys(commandMapping);
 
 function parseCommand(message) {
-
 	const commandStringRegExp = new RegExp('^(' + commands.join('(\\s|)|') + '(\\s|))+');
     const commandRegExp = new RegExp(commands.join('|'), 'g');
 
@@ -41,9 +40,6 @@ function parseCommand(message) {
     if (commandString) {
         let s = message.replace(commandString, '');
         console.log(s);
-        if(!s){
-        	return;
-        }
 
         for(command of commandString.match(commandRegExp)){
         	if(command){
@@ -64,21 +60,17 @@ function parseCommand(message) {
  * @param {*} inputText 
  */
 function buildResponse(chatId, inputText) {
-    let message = inputText;
-    let response = {
-            statusCode: 200,
-        };
+    const response = {
+        statusCode: 200,
+    };
 
     const parsed = parseCommand(inputText);
     if (parsed) {
-        message = parsed;
-        response.body = JSON.stringify(
-            {
-                method: 'sendMessage',
-                chat_id: chatId,
-                text: message
-            }
-        );
+        response.body = JSON.stringify({
+            method: 'sendMessage',
+            chat_id: chatId,
+            text: parsed,
+        });
     }
 
     return response;
@@ -135,7 +127,7 @@ exports.telegramHandler = async (event) => {
         console.error(e);
         return {
             statusCode: 500,
-            body: JSON.stringify('failed to send message'),
+            body: JSON.stringify('an unexpected error occurred'),
         };
     }
 }
