@@ -1,0 +1,11 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "meme-type-chat"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-dhm7k0vmr41y"
+s3_prefix = "meme-type-chat"
+region = "us-east-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+

@@ -2,14 +2,13 @@
   "name": "meme-type-chat",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "brew-install-buzzwords",
   "license": "AGPL-3.0",
   "dependencies": {
-    "axios": "^0.19.2",
     "meme-type-npm": "^1.0.2"
   }
 }

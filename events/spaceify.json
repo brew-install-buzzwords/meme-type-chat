@@ -1,0 +1,36 @@
+{
+    "version": "2.0",
+    "routeKey": "ANY /meme-type_Telegram",
+    "rawPath": "/default/meme-type_Telegram",
+    "rawQueryString": "",
+    "headers": {
+        "accept-encoding": "gzip, deflate",
+        "content-length": "345",
+        "content-type": "application/json",
+        "host": "aw1fuu7en1.execute-api.us-east-1.amazonaws.com",
+        "x-amzn-trace-id": "Root=1-5f43dd4b-55a99db0781a42e0986bc990",
+        "x-forwarded-for": "91.108.6.135",
+        "x-forwarded-port": "443",
+        "x-forwarded-proto": "https"
+    },
+    "requestContext": {
+        "accountId": "189660186940",
+        "apiId": "aw1fuu7en1",
+        "domainName": "aw1fuu7en1.execute-api.us-east-1.amazonaws.com",
+        "domainPrefix": "aw1fuu7en1",
+        "http": {
+            "method": "POST",
+            "path": "/default/meme-type_Telegram",
+            "protocol": "HTTP/1.1",
+            "sourceIp": "91.108.6.135",
+            "userAgent": ""
+        },
+        "requestId": "Rx-DzgknIAMEMYw=",
+        "routeKey": "ANY /meme-type_Telegram",
+        "stage": "default",
+        "time": "24/Aug/2020:15:31:23 +0000",
+        "timeEpoch": 1598283083409
+    },
+    "body": "{\"update_id\":123456789,\n\"message\":{\"message_id\":123,\"from\":{\"id\":123456789,\"is_bot\":false,\"first_name\":\"User\",\"username\":\"user\",\"language_code\":\"en\"},\"chat\":{\"id\":987654321,\"first_name\":\"User\",\"username\":\"user\",\"type\":\"private\"},\"date\":1598283083,\"text\":\"/spaceify testing\",\"entities\":[{\"offset\":0,\"length\":9,\"type\":\"bot_command\"}]}}",
+    "isBase64Encoded": false
+}
